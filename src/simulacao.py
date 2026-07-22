@@ -28,7 +28,7 @@ F = np.array([
 
 B = np.zeros((2,1)) # sem controle
 
-H = np.array([[1,1]]) # apenas ângulo
+H = np.array([[1,0]]) # apenas ângulo
 
 sigma_acc = 0.01 # ruído da medição do acelerômetro
 
@@ -102,6 +102,13 @@ plt.plot(
 	acc_measure,
 	alpha=0.5,
 	label="Acelerômetro"
+)
+
+plt.plot(
+	t,
+	gyro_measure,
+	alpha=0.5,
+	label="Giroscópio"
 )
 
 plt.plot(

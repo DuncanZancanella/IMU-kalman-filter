@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 /* USER CODE END Includes */
 
@@ -143,13 +144,13 @@ int main(void)
         {
             MPU6050_ReadAll(&sensorData);
 
+            float acc_roll = atan2f(sensorData.accel_y, sensorData.accel_z);
+            float gyr_roll = sensorData.gyro_x * (float)M_PI / 180.0f;
+
             // print direto no console da IDE
             //		i) Python pode ler serial e rodar filtro de Kalman lá
             //		ii) implementar filtro de Kalman interno
-            sprintf(msg, "AX:%.2f AY:%.2f AZ:%.2f | GX:%.2f GY:%.2f GZ:%.2f | T:%.1fC\r\n",
-                    sensorData.accel_x, sensorData.accel_y, sensorData.accel_z,
-                    sensorData.gyro_x, sensorData.gyro_y, sensorData.gyro_z,
-                    sensorData.temp);
+            sprintf(msg, "%.6f,%.6f\r\n", gyro_roll, roll_acc);
 
             HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 
