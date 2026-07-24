@@ -7,7 +7,7 @@ from pyqtgraph.Qt import QtWidgets, QtCore
 from kalman import Kalman
 
 
-PORT = "COM5"
+PORT = "COM10"
 BAUD = 115200
 
 ser = serial.Serial(PORT, BAUD, timeout=0.01)
@@ -27,8 +27,8 @@ B = np.array([ [dt], [0] ])
 # accelerometer measures only angle
 H = np.array([ [1, 0] ])
 
-sigma_acc = 0.03
-sigma_gyro = 0.01
+sigma_acc = 0.01
+sigma_gyro = 0.03
 
 Q = np.array([ [sigma_acc**2] ])
 
@@ -59,7 +59,7 @@ app = QtWidgets.QApplication([])
 pg.setConfigOptions(antialias=True)
 
 win = pg.GraphicsLayoutWidget(
-	title="STM32 IMU + Kalman Filter"
+	title="STM32 IMU + Linear Kalman Filter"
 )
 
 plot = win.addPlot()
@@ -68,17 +68,17 @@ plot.addLegend()
 
 plot.showGrid(x=True, y=True)
 
-plot.setLabel("left", "Angle (rad)")
-plot.setLabel("bottom", "Time (s)")
+plot.setLabel("left", "Ângulo (graus)")
+plot.setLabel("bottom", "Tempo (s)")
 
 gyro_curve = plot.plot(
 	pen='r',
-	name="Gyroscope"
+	name="Giroscópio"
 )
 
 acc_curve = plot.plot(
 	pen='g',
-	name="Accelerometer"
+	name="Acelerômetro"
 )
 
 kalman_curve = plot.plot(
@@ -104,6 +104,8 @@ def update():
 	try:
 
 		gyro, acc = map(float, line.split(","))
+		gyro = np.degrees(gyro)
+		acc = np.degrees(acc)
 
 	except ValueError:
 		return
